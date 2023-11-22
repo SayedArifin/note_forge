@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/config/site'
-
+import { Toaster } from "sonner"
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -26,6 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Toaster />
       <body className={inter.className}>{children}</body>
     </html>
   )
