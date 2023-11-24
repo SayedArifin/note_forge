@@ -9,10 +9,11 @@ import { toast } from "sonner";
 import { useEventListener } from "usehooks-ts";
 import ListOptions from "./ListOptions";
 interface ListHeaderProps {
-    data: List
+    data: List;
+    onAddCard: () => void;
 }
 
-const ListHeader: React.FC<ListHeaderProps> = ({ data }) => {
+const ListHeader: React.FC<ListHeaderProps> = ({ data, onAddCard }) => {
     const [title, setTitle] = useState(data?.title);
     const [isEditing, setIsEditing] = useState(false);
     const formRef = useRef<ElementRef<"form">>(null);
@@ -88,7 +89,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ data }) => {
             </div>
         )}
         <ListOptions
-            onAddCard={() => { }}
+            onAddCard={onAddCard}
             data={data}
         />
     </div>
