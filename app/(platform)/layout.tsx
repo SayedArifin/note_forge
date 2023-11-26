@@ -1,3 +1,5 @@
+import ModalProvider from "@/components/providers/ModalProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 
 interface layoutProps {
@@ -7,7 +9,10 @@ interface layoutProps {
 const layout: React.FC<layoutProps> = ({ children }) => {
     return (
         <ClerkProvider>
-            {children}
+            <QueryProvider>
+                <ModalProvider />
+                {children}
+            </QueryProvider>
         </ClerkProvider>
     );
 };
