@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import Info from "../_components/Info";
-import { ActivityList } from "./_components/activity";
+import { ActivityList } from "./_components/Activity";
 import { Suspense } from "react";
 
 interface pageProps {
