@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { UpdateCardOrder } from "./schema";
+import { createAuditLog } from "@/lib/create-audit-log";
+import { ACTION, ENTRY_TYPE } from "@prisma/client";
 
 
 
@@ -48,6 +50,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
             })
         )
         updatedCard = await db.$transaction(transaction);
+
     } catch (error) {
         return {
             error: "failed to craete list"

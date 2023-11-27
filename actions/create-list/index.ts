@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { CreateList } from "./schema";
+import { createAuditLog } from "@/lib/create-audit-log";
+import { ACTION, ENTRY_TYPE } from "@prisma/client";
 
 
 
@@ -51,10 +53,22 @@ const handler = async (data: InputType): Promise<ReturnType> => {
                 title, boardId, order: newOrder
             }
         })
+
     } catch (error) {
         return {
             error: "failed to craete list"
         }
+    }
+    try {
+        await createAuditLog({
+            entityId: list.id,
+            entityTitle: list.title,
+            entityType: ENTRY_TYPE.LIST,
+            action: ACTION.CREATE
+        })
+
+    } catch (error) {
+        console.log(error);
     }
 
     revalidatePath(`/board/${boardId}`);

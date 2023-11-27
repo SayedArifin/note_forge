@@ -5,10 +5,9 @@ import { InputType, ReturnType } from "./type"
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
-import { DeleteList } from "./schema";
+import { UpdateCard } from "./schema";
 import { createAuditLog } from "@/lib/create-audit-log";
 import { ACTION, ENTRY_TYPE } from "@prisma/client";
-
 
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -20,29 +19,31 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         }
     }
 
-    const { id, boardId } = data;
+    const { id, boardId, ...values } = data;
 
-    if (!id || !boardId) {
-        return {
-            error: "Missing image fields. Faild to delete board"
-        }
-    }
-    let list;
+
+    let card;
     try {
 
-        list = await db.list.delete({
+        card = await db.card.update({
             where: {
-                id, boardId, board: {
-                    orgId
+                id, list: {
+                    board: {
+                        orgId,
+                    }
                 }
+            },
+            data: {
+                ...values
             }
-        })
+        }
+        )
         try {
             await createAuditLog({
-                entityId: list.id,
-                entityTitle: list.title,
-                entityType: ENTRY_TYPE.LIST,
-                action: ACTION.DELETE
+                entityId: card.id,
+                entityTitle: card.title,
+                entityType: ENTRY_TYPE.CARD,
+                action: ACTION.UPDATE
             })
 
         } catch (error) {
@@ -50,12 +51,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         }
     } catch (error) {
         return {
-            error: "failed to delete board"
+            error: "failed to update board"
         }
     }
 
     revalidatePath(`/board/${boardId}`);
-    return { data: list }
+    return { data: card }
 }
 
-export const deleteList = createSafeAction(DeleteList, handler)
+export const updateCard = createSafeAction(UpdateCard, handler)

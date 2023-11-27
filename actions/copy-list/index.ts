@@ -8,6 +8,8 @@ import { createSafeAction } from "@/lib/create-safe-action";
 
 import { CopyList } from "./schema";
 import { InputType, ReturnType } from "./type";
+import { createAuditLog } from "@/lib/create-audit-log";
+import { ACTION, ENTRY_TYPE } from "@prisma/client";
 
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -71,6 +73,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
                     listId: list.id, // Associate the card with the newly created list
                 })),
             });
+        }
+        try {
+            await createAuditLog({
+                entityId: list.id,
+                entityTitle: list.title,
+                entityType: ENTRY_TYPE.LIST,
+                action: ACTION.CREATE
+            })
+
+        } catch (error) {
+            console.log(error);
         }
     } catch (e: any) {
         return {

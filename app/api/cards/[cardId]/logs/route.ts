@@ -1,0 +1,22 @@
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs";
+import { ENTRY_TYPE } from "@prisma/client";
+import { NextResponse } from "next/server";
+export async function GET(req: Request, { params }: { params: { cardId: string } }) {
+    try {
+        const { userId, orgId } = auth()
+        if (!userId || !orgId) {
+            return new NextResponse("Unauthenticated", { status: 401 });
+        }
+        const auditLogs = await db.auditLog.findMany({
+            where: {
+                orgId, entityId: params.cardId, entityType: ENTRY_TYPE.CARD
+            }, orderBy: {
+                createdAt: "desc"
+            }, take: 3
+        })
+        return NextResponse.json(auditLogs);
+    } catch (error) {
+        return new NextResponse("Internal Server Error", { status: 500 });
+    }
+}

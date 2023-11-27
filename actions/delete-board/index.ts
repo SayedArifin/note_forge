@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { DeleteBoard } from "./schema";
 import { redirect } from "next/navigation";
+import { createAuditLog } from "@/lib/create-audit-log";
+import { ACTION, ENTRY_TYPE } from "@prisma/client";
 
 
 
@@ -34,6 +36,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
                 id, orgId,
             }
         })
+        try {
+            await createAuditLog({
+                entityId: board.id,
+                entityTitle: board.title,
+                entityType: ENTRY_TYPE.BOARD,
+                action: ACTION.DELETE
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
     } catch (error) {
         return {
             error: "failed to delete board"
