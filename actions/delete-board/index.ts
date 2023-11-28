@@ -10,12 +10,13 @@ import { redirect } from "next/navigation";
 import { createAuditLog } from "@/lib/create-audit-log";
 import { ACTION, ENTRY_TYPE } from "@prisma/client";
 import { decreaseAvailableCount } from "@/lib/org-limit";
+import { checkSubscription } from "@/lib/subscription";
 
 
 
 const handler = async (data: InputType): Promise<ReturnType> => {
     const { userId, orgId } = auth();
-
+    const isPro = await checkSubscription();
     if (!userId || !orgId) {
         return {
             error: "Unauthenticated "
@@ -37,7 +38,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
                 id, orgId,
             }
         })
-        await decreaseAvailableCount();
+        if (!isPro) {
+            await decreaseAvailableCount();
+        }
         try {
             await createAuditLog({
                 entityId: board.id,
