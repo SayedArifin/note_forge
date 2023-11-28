@@ -24,10 +24,11 @@ const CardModel: React.FC<CardModelProps> = () => {
         queryKey: ["card", id],
         queryFn: () => fetcher(`/api/cards/${id}`),
     })
-    const { data: auditLogData } = useQuery<AuditLog>({
+    const { data: auditLogData } = useQuery<AuditLog[]>({
         queryKey: ["card-log", id],
         queryFn: () => fetcher(`/api/cards/${id}/logs`),
     })
+
     return <Dialog open={isOpen} onOpenChange={onClose}>
 
         <DialogContent>{!cardData ? (<div className="flex items-start gap-x-3 mb-6">
@@ -59,7 +60,7 @@ const CardModel: React.FC<CardModelProps> = () => {
                 </div>) : <Action data={cardData} />}
 
             </div>
-            {!auditLogData ? <Activity.Skeleton /> : <Activity items={[auditLogData]} />}
+            {!auditLogData ? <Activity.Skeleton /> : <Activity items={auditLogData} />}
         </DialogContent>
     </Dialog>;
 };
