@@ -6,9 +6,10 @@ import { CreditCard } from "lucide-react";
 import Image from "next/image";
 
 interface InfoProps {
+    isPro: boolean;
 }
 
-const Info: React.FC<InfoProps> = () => {
+const Info: React.FC<InfoProps> = ({ isPro }) => {
     const { organization, isLoaded } = useOrganization();
     if (!isLoaded) {
         return (
@@ -23,7 +24,7 @@ const Info: React.FC<InfoProps> = () => {
         </div>
         <div className="space-y-1">
             <p className="font-semibold text-xl">{organization?.name}</p>
-            <div className="flex items-center text-xs text-muted-foreground"><CreditCard className="h-3 w-3 mr1" />Free</div>
+            <div className="flex items-center text-xs text-muted-foreground"><CreditCard className="h-3 w-3 mr1" />{isPro ? "Pro" : "Free"}</div>
         </div>
     </div>;
 };

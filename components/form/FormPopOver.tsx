@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import FormPicker from "./FormPicker";
 import { ElementRef, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useProModal } from "@/hooks/use-pro-model";
 
 interface FormPopOverProps {
     children: React.ReactNode;
@@ -20,6 +21,7 @@ interface FormPopOverProps {
 }
 
 const FormPopOver: React.FC<FormPopOverProps> = ({ children, align, sideOffset = 0, side = "bottom" }) => {
+    const proModel = useProModal();
     const router = useRouter();
     const closeRef = useRef<ElementRef<"button">>(null)
     const { execute, fieldErrors } = useAction(createBoard, {
@@ -31,6 +33,7 @@ const FormPopOver: React.FC<FormPopOverProps> = ({ children, align, sideOffset =
         onError: (error) => {
 
             toast.error(error)
+            proModel.onOpen();
         },
     })
     const onSubmit = (formData: FormData) => {

@@ -59,7 +59,7 @@ const CardModel: React.FC<CardModelProps> = () => {
                 </div>) : <Action data={cardData} />}
 
             </div>
-            {!auditLogData ? <Activity.Skeleton /> : <Activity items={auditLogData} />}
+            {!auditLogData ? <Activity.Skeleton /> : <Activity items={[auditLogData]} />}
         </DialogContent>
     </Dialog>;
 };

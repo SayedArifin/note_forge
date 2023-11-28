@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardModel from "../model/CardModel";
+import ProModel from "../model/ProModel";
 
 interface ModalProviderProps {
 }
@@ -16,6 +17,7 @@ const ModalProvider: React.FC<ModalProviderProps> = () => {
     }
     return <div>
         <CardModel />
+        <ProModel />
     </div>;
 };
 
